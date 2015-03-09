@@ -10,6 +10,11 @@
   margin-left: 25%; // Отступ слева 200 пикселей
   margin-right: 25%; // Отступ справа 200 пикселей
 }
+/* 
+20% is not 200 pixels
+it is relative size that depends on actual screen/parent container size
+to set absulute value use 200px
+*/
 .clear {
   clear: both; // Отменяем позиционирование (влияние float)
 }
