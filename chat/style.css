@@ -13,12 +13,38 @@
 .clear {
   clear: both; // Отменяем позиционирование (влияние float)
 }
-.circle{width:30px;
-  height:30px;
-  border-radius:20px;
-  font-size:10px;
-  color:blue;
-  line-height:20px;
-  text-align:center;
-  background:pink;
+.menu {
+align="center";
+color:white;
 }
+
+.chat {
+color:white;
+}
+
+.stroka {
+color:white;
+}
+
+.n_s{
+width:50%;
+resize: none;
+}
+
+.ren_s{
+width:40%;
+}
+
+.areaForText{
+width:60%;
+}
+
+.sending{
+width:10%;
+}
+
+.writing{
+width:54%;
+resize: none;
+}
+
