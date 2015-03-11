@@ -1,24 +1,18 @@
 #left {
   float: left; // Левые блоки размещаем слева
-  width: 20%; // Установка ширины 200 пикселей
+  width: 20%; // Установка ширины 
 }
 #right {
   float: right; // Правые блоки размещаем справа
-  width: 20%; // Установка ширины 200 пикселей
+  width: 20%; 
 }
 #center {
-  margin-left: 25%; // Отступ слева 200 пикселей
-  margin-right: 25%; // Отступ справа 200 пикселей
+  margin-left: 25%; // Отступ слева
+  margin-right: 25%; // Отступ справа
 }
-/* 
-20% is not 200 pixels
-it is relative size that depends on actual screen/parent container size
-to set absulute value use 200px
-*/
 .clear {
   clear: both; // Отменяем позиционирование (влияние float)
 }
-<<<<<<< HEAD
 .menu {
 align="center";
 color:white;
@@ -54,14 +48,5 @@ width:54%;
 resize: none;
 }
 
-=======
-.circle{width:30px;
-  height:30px;
-  border-radius:20px;
-  font-size:10px;
-  color:blue;
-  line-height:20px;
-  text-align:center;
-  background:pink;
-}
->>>>>>> 3ee1beeff688317b87e361aa4583c88ef27c976c
+
+
