@@ -1,15 +1,15 @@
 function run(){
-	var Send = document.getElementById('send');
-	var Rename = document.getElementById('rename');
-	var Delete = document.getElementById('delete');
-	var InSelect = document.getElementById('select');
-	var Edit = document.getElementById('send_edit_message');
+	var send = document.getElementById('send');
+	var rename = document.getElementById('rename');
+	var deletee = document.getElementById('delete');
+	var inSelect = document.getElementById('select');
+	var edit = document.getElementById('send_edit_message');
 	
-	Send.addEventListener('click', EventSend);
-	Rename.addEventListener('click', EventRename);
-	Delete.addEventListener('click', EventDelete);
-	InSelect.addEventListener('click', EventActionSelect);
-	Edit.addEventListener('click', EventActionEdit);
+	send.addEventListener('click', EventSend);
+	rename.addEventListener('click', EventRename);
+	deletee.addEventListener('click', EventDelete);
+	inSelect.addEventListener('click', EventActionSelect);
+	edit.addEventListener('click', EventActionEdit);
 }
 
 function EventSend(evtObj){
