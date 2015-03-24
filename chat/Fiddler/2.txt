@@ -1,9 +1,0 @@
-GET http://localhost:999/chat?token=TN34EN HTTP/1.1
-Host: localhost:999
-User-Agent: Composer
-
-
-HTTP/1.1 200 OK
-Content-length: 46
-
-{"token":"TN19EN","messages":["How are you?"]}
