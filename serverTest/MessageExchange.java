@@ -26,13 +26,12 @@ public class MessageExchange {
     }
 
     public String getClientSendMessageRequest(AboutMessage message) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", message);
-        return jsonObject.toJSONString();
+        
+        return message.toJSONString();
     }
 
     public AboutMessage getClientMessage(InputStream inputStream) throws ParseException {
-        return AboutMessage.parseInfoMessage((JSONObject) getJSONObject(inputStreamToString(inputStream)).get("message"));
+        return AboutMessage.parseInfoMessage((JSONObject) getJSONObject(inputStreamToString(inputStream)));
     }
 
     public JSONObject getJSONObject(String json) throws ParseException {
