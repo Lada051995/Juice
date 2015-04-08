@@ -1,3 +1,5 @@
+
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -107,8 +109,10 @@ public class Server implements HttpHandler {
     	int idOfChangeMessage =  messageChange.getIdNumber();
     	if(idOfChangeMessage >= 0 && idOfChangeMessage < history.size()) {
     		AboutMessage about = history.get(idOfChangeMessage);
+    		if (about.isDelete() == false){
     		about.setMessage(messageChange.getMessage());
     		about.setEdit(true);
+    		}
     	}
      } catch (ParseException e) {
         System.err.println("Invalid user message: " + httpExchange.getRequestBody() + " " + e.getMessage());

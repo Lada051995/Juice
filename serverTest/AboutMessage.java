@@ -1,3 +1,4 @@
+
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 public class AboutMessage implements JSONAware {
@@ -5,8 +6,8 @@ public class AboutMessage implements JSONAware {
 	private String userName;
 	private String message;
 	private int idNumber;
-	private boolean edit = false;
-	private boolean delete = false;
+	private boolean edit;
+	private boolean delete;
 	
 	public AboutMessage(){
 		userName = "1";
@@ -42,7 +43,7 @@ public class AboutMessage implements JSONAware {
 	public void setDelete(boolean delete){
 		this.delete = delete;
 	}
-	public boolean getDelete(){
+	public boolean isDelete(){
 		return delete;
 	}
 	
