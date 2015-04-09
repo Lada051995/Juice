@@ -60,7 +60,9 @@ public class AboutMessage implements JSONAware {
 		    information.userName = (String)obj.get("user");
 		}
 		information.message = (String)obj.get("message");
-		information.idNumber = Integer.parseInt(obj.get("id").toString());
+		if (obj.get("id") != null){
+		    information.idNumber = Integer.parseInt(obj.get("id").toString());
+		}
 		return information;
 	}	
 	@Override

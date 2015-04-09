@@ -1,0 +1,17 @@
+удаление происходит по токину
+
+таким образом происходит отправка нового сообщени€:
+POST /chat HTTP/1.1
+Host: localhost:999
+User-Agent: Fiddler
+
+{"message":"WhatТs up ?"}
+
+
+вот так редактирование:
+
+ PUT /chat HTTP/1.1
+ Host: localhost:999
+ User-Agent: Fiddler
+ 
+ {"id":"2", "message":"Hi ! WhatТs up ?"}
