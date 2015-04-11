@@ -1,5 +1,6 @@
-var messageOption = function (text, value){
+var messageOption = function (name, text, value){
 	return{
+		user : name,
 		message : text,
 		id : value
 	};
@@ -11,7 +12,11 @@ var fullName = function (name, surname){
 		surname : surname
 	};
 };
-
+var appState = {
+	mainUrl : 'http://localhost:999/chat',
+	taskList:[],
+	token : 'TE11EN'
+};
 var listforSavingMessages = [];
 
 function run(){
@@ -22,10 +27,7 @@ function run(){
 	var edit = document.getElementById('send_edit_message');
 	var onOff = document.getElementById('OnOff');
 	
-	if (restoreMessages() != null){
-		var allMessages = restoreMessages();
-		createAllMessages(allMessages);
-	}
+	restoreMessages();
 	
 	if (restoreName() != null){
 		var nameAndSurname = restoreName();
@@ -61,10 +63,10 @@ function EventSend(evtObj){
 		option.text = textArea.value + ": " + areatext.value;
 		option.value = select.length;
 		select.add(option);
-		areatext.value = "";
 		
-		listforSavingMessages.push(messageOption(option.text, option.value));
-		storeMessages(listforSavingMessages);
+        var sendmessage = messageOption(textArea.value, areatext.value, select.length);
+		areatext.value = "";
+		storeMessages(sendmessage, function(){});
 		}
 }
 
@@ -88,8 +90,8 @@ function EventDelete(evnObj){
 	var index = document.getElementById('select').selectedIndex;
 	var select = document.getElementById('select')[index];
 	select.text = '\u2421';
-	listforSavingMessages[index] = messageOption(select.text, index);
-	storeMessages(listforSavingMessages);
+	var message = messageOption(n_s.value, select.text, index);
+	deleteMessages(message.id, function(){});
 	edit_text.value = "";
 }
 
@@ -114,27 +116,50 @@ function EventActionEdit(evnObj){
 	var select = document.getElementById('select')[index];
 	if(select.text != '\u2421'){
 	select.text = n_s.value + ": "+ edit_text.value+ " " + '\u270e';
-	listforSavingMessages[index] = messageOption(select.text, index);
-	storeMessages(listforSavingMessages);
+	var mess = messageOption(n_s.value, edit_text.value+ " " + '\u270e', index);
+	editMessages(mess, function(){});
 	edit_text.value = "";
 	}
 }
 
-function storeMessages(listforSavingMessages){
-	if(typeof (Storage) == "undefined"){
-		alert('local storage is not accessible');
-		return;
-	}
-	localStorage.setItem("list messages", JSON.stringify(listforSavingMessages));
+function storeMessages(message, continueWith){
+	post(appState.mainUrl, JSON.stringify(message), function(){
+		
+	});
 }
 
-function restoreMessages(){
-	if(typeof (Storage) == "undefined"){
-		alert('local storage is not accessible');
-		return;
-	}
-	var item = localStorage.getItem("list messages");
-	return item && JSON.parse(item);
+function editMessages(message, continueWith){
+	put(appState.mainUrl, JSON.stringify(message), function() {
+		
+	});
+}
+
+function restoreMessages(continueWith){
+	var url = appState.mainUrl + '?token=' + appState.token;
+	
+	var item;
+	get(url, function(responseText) {
+		console.assert(responseText != null);
+
+		var response = JSON.parse(responseText);
+        item = response.messages;
+		createAllMessages(item);
+		continueWith && continueWith();
+		
+	});
+	
+	
+}
+
+function deleteMessages(index, continueWith){
+	var indextoken = index*8+11;
+	var url = appState.mainUrl + '?token=' + "TN" + indextoken.toString() + "EN";
+	var item;
+	deleted(url, function() {
+			
+	});
+	
+	
 }
 
 function createAllMessages(allMessages){
@@ -147,7 +172,7 @@ function createAllMessages(allMessages){
 function addMessage(message){
 	var selected = document.getElementById('select');
 	var option = document.createElement("option");
-	option.text = message.message;
+	option.text = message.user + ": " + message.message;
 	option.value = message.id;
 	
 	selected.add(option);
@@ -173,4 +198,84 @@ function restoreName(){
 function createNameSurname(nameAndSurname){
 	var textArea = document.getElementById('name_surname');
 	textArea.value = nameAndSurname.name + " " + nameAndSurname.surname;
+}
+
+
+
+function defaultErrorHandler(message) {
+	console.error(message);
+	output(message);
+}
+
+function get(url, continueWith, continueWithError) {
+	ajax('GET', url, null, continueWith, continueWithError);
+}
+
+function post(url, data, continueWith, continueWithError) {
+	ajax('POST', url, data, continueWith, continueWithError);	
+}
+
+function put(url, data, continueWith, continueWithError) {
+	ajax('PUT', url, data, continueWith, continueWithError);	
+}
+
+function deleted(url, data, continueWith, continueWithError) {
+	ajax('DELETE', url, null, continueWith, continueWithError);	
+}
+
+function isError(text) {
+	if(text == "")
+		return false;
+	
+	try {
+		var obj = JSON.parse(text);
+	} catch(ex) {
+		return true;
+	}
+
+	return !!obj.error;
+}
+
+function ajax(method, url, data, continueWith, continueWithError) {
+	var xhr = new XMLHttpRequest();
+
+	continueWithError = continueWithError || defaultErrorHandler;
+	xhr.open(method || 'GET', url, true);
+
+	xhr.onload = function () {
+		if (xhr.readyState !== 4)
+			return;
+
+		if(xhr.status != 200) {
+			continueWithError('Error on the server side, response ' + xhr.status);
+			return;
+		}
+
+		if(isError(xhr.responseText)) {
+			continueWithError('Error on the server side, response ' + xhr.responseText);
+			return;
+		}
+
+		continueWith(xhr.responseText);
+	};    
+
+    xhr.ontimeout = function () {
+    	ontinueWithError('Server timed out !');
+    }
+
+    xhr.onerror = function (e) {
+    	var errMsg = 'Server connection error !\n'+
+    	'\n' +
+    	'Check if \n'+
+    	'- server is active\n'+
+    	'- server sends header "Access-Control-Allow-Origin:*"';
+
+        continueWithError(errMsg);
+    };
+
+    xhr.send(data);
+}
+
+window.onerror = function(err) {
+	output(err.toString());
 }
