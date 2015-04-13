@@ -44,14 +44,8 @@ function run(){
 
 function EventOnOff(evtObj){
 	var onoff = document.getElementById('OnOff');
-	if(onoff.className =='btn btn-danger'){
-		onoff.className = 'btn btn-success';
-		onoff.value = "ON";
-	}
-	else{
-	    onoff.className = 'btn btn-danger';
-	    onoff.value = "OFF";
-	}
+	onoff.className = 'btn btn-success';
+	onoff.value = "ON";
 }
 
 function EventSend(evtObj){
@@ -89,22 +83,28 @@ function EventDelete(evnObj){
 	var edit_text = document.getElementById('textformessage');
 	var index = document.getElementById('select').selectedIndex;
 	var select = document.getElementById('select')[index];
-	select.text = '\u2421';
-	var message = messageOption(n_s.value, select.text, index);
-	deleteMessages(message.id, function(){});
-	edit_text.value = "";
+	var subindex = select.text.indexOf(":");
+	var subindex2 = select.text.indexOf('\u270e');
+	if (n_s.value == select.text.substring(0, subindex)&& select.text.substring(subindex+1, subindex2)!= " Deleted message"){
+	     select.text = '\u2421';
+	     var message = messageOption(n_s.value, select.text, index);
+	     deleteMessages(message.id, function(){});
+	     edit_text.value = "";
+	}
 }
 
 function EventActionSelect(evnObj){
 	var textarea = document.getElementById('textformessage');
 	var index = document.getElementById('select').selectedIndex;
 	var selected = document.getElementById('select')[index];
-	if(selected.text != '\u2421'){
+	var n_s = document.getElementById('name_surname');
 	var subindex = selected.text.indexOf(":");
-	   if (selected.text.indexOf('\u270e')!=(-1)){
-	    	var subindex2 = selected.text.indexOf('\u270e');
+	var subindex2 = selected.text.length;
+	if (selected.text.indexOf('\u270e')!=(-1)){
+	    	subindex2 = selected.text.indexOf('\u270e');
 	    }
-	textarea.value = selected.text.substring(subindex+1, subindex2);
+	if((selected.text != '\u2421') && (n_s.value == selected.text.substring(0, subindex)) && (selected.text.substring(subindex+2, subindex2)!= "Deleted message")){
+	     textarea.value = selected.text.substring(subindex+1, subindex2);
 	}
 }
 
@@ -114,11 +114,13 @@ function EventActionEdit(evnObj){
 	var edit_text = document.getElementById('textformessage');
 	var index = document.getElementById('select').selectedIndex;
 	var select = document.getElementById('select')[index];
-	if(select.text != '\u2421'){
-	select.text = n_s.value + ": "+ edit_text.value+ " " + '\u270e';
-	var mess = messageOption(n_s.value, edit_text.value+ " " + '\u270e', index);
-	editMessages(mess, function(){});
-	edit_text.value = "";
+    var subindex = select.text.indexOf(":");
+	var subindex2 = select.text.length;
+	if((select.text != '\u2421') && (select.text.substring(subindex+2, subindex2)!= "Deleted message") && (n_s.value == select.text.substring(0, subindex))){
+	     select.text = n_s.value + ": "+ edit_text.value+ " " + '\u270e';
+	     var mess = messageOption(n_s.value, edit_text.value+ " " + '\u270e', index);
+	     editMessages(mess, function(){});
+	     edit_text.value = "";
 	}
 }
 
@@ -140,7 +142,7 @@ function restoreMessages(continueWith){
 	var item;
 	get(url, function(responseText) {
 		console.assert(responseText != null);
-
+        EventOnOff();
 		var response = JSON.parse(responseText);
         item = response.messages;
 		createAllMessages(item);
@@ -203,8 +205,9 @@ function createNameSurname(nameAndSurname){
 
 
 function defaultErrorHandler(message) {
-	console.error(message);
-	output(message);
+	var onoff = document.getElementById('OnOff');
+	    onoff.className = 'btn btn-danger';
+	    onoff.value = "OFF";
 }
 
 function get(url, continueWith, continueWithError) {
