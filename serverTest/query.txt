@@ -1,6 +1,7 @@
-удаление происходит по токину
+1) delete using token
 
-таким образом происходит отправка нового сообщени€:
+2) to send new message:
+
 POST /chat HTTP/1.1
 Host: localhost:999
 User-Agent: Fiddler
@@ -8,7 +9,7 @@ User-Agent: Fiddler
 {"message":"WhatТs up ?"}
 
 
-вот так редактирование:
+3) to edit message
 
  PUT /chat HTTP/1.1
  Host: localhost:999
