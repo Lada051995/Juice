@@ -1,4 +1,12 @@
+package Server;
 
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import java.net.HttpURLConnection;
+
+import AboutMessage.AboutMessage;
+import MessageExchange.MessageExchange;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -14,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Server implements HttpHandler {
     private List<AboutMessage> history = new ArrayList<AboutMessage>();
@@ -53,6 +63,8 @@ public class Server implements HttpHandler {
         	doDelete(httpExchange);
         } else if ("PUT".equals(httpExchange.getRequestMethod())) {
         	doPut(httpExchange);
+        }  else if ("OPTIONS".equals(httpExchange.getRequestMethod())) {
+            response = "";
         }
           else {
             response = "Unsupported http method: " + httpExchange.getRequestMethod();
@@ -112,6 +124,7 @@ public class Server implements HttpHandler {
     		if (about.isDelete() == false){
     		about.setMessage(messageChange.getMessage());
     		about.setEdit(true);
+    		System.out.println("Change "+ about.toJSONString());
     		}
     	}
      } catch (ParseException e) {
@@ -123,6 +136,9 @@ public class Server implements HttpHandler {
             byte[] bytes = response.getBytes();
             Headers headers = httpExchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin","*");
+            if("OPTIONS".equals(httpExchange.getRequestMethod())) {
+                headers.add("Access-Control-Allow-Methods","PUT, DELETE, POST, GET, OPTIONS");
+            }
             httpExchange.sendResponseHeaders(200, bytes.length);
             OutputStream os = httpExchange.getResponseBody();
             os.write( bytes);
