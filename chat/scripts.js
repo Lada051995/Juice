@@ -86,7 +86,7 @@ function EventDelete(evnObj){
 	var subindex = select.text.indexOf(":");
 	var subindex2 = select.text.indexOf('\u270e');
 	if (n_s.value == select.text.substring(0, subindex)&& select.text.substring(subindex+1, subindex2)!= " Deleted message"){
-	     select.text = '\u2421';
+	     
 	     var message = messageOption(n_s.value, select.text, index);
 	     deleteMessages(message.id, function(){});
 	     edit_text.value = "";
@@ -117,7 +117,7 @@ function EventActionEdit(evnObj){
     var subindex = select.text.indexOf(":");
 	var subindex2 = select.text.length;
 	if((select.text != '\u2421') && (select.text.substring(subindex+2, subindex2)!= "Deleted message") && (n_s.value == select.text.substring(0, subindex))){
-	     select.text = n_s.value + ": "+ edit_text.value+ " " + '\u270e';
+	     
 	     var mess = messageOption(n_s.value, edit_text.value+ " " + '\u270e', index);
 	     editMessages(mess, function(){});
 	     edit_text.value = "";
@@ -149,7 +149,7 @@ function restoreMessages(continueWith){
 		continueWith && continueWith();
 		
 	});
-	
+	setTimeout(restoreMessages,1000);
 	
 }
 
@@ -165,9 +165,16 @@ function deleteMessages(index, continueWith){
 }
 
 function createAllMessages(allMessages){
-	for (var i = 0; i < allMessages.length; i++){
-		listforSavingMessages.push(allMessages[i]);
+	for ( var i = 0; i < allMessages.length; i++){
+		if(document.getElementById('select').childElementCount > allMessages[i].id) {
+			var index = document.getElementById('select').selectedIndex;
+	        var select = document.getElementById('select')[allMessages[i].id];
+			if( select.text != allMessages[i].text) {
+			select.text = allMessages[i].user + ":" + allMessages[i].message;
+			}
+		} else {
 		addMessage(allMessages[i]);
+		}
 	}
 }
 
